@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Row } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import './style.less';
+import { Link } from 'react-router-dom';
 
-Login.propTypes = {
-
-}
-
-function Login(props) {
+const Login = () => {
   const [form] = Form.useForm();
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
 
@@ -20,125 +17,66 @@ function Login(props) {
   };
 
   return (
-    <Form form={form} name="horizontal_login" layout="inline" onFinish={onFinish}>
-      <Form.Item
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your username!',
-          },
-        ]}
+    <div className='login'>
+      <Form
+        name="normal_login"
+        className="login__form"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-      </Form.Item>
-      <Form.Item
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-      >
-        <Input
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          type="password"
-          placeholder="Password"
-        />
-      </Form.Item>
-      <Form.Item shouldUpdate>
-        {() => (
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={
-              !form.isFieldsTouched(true) ||
-              !!form.getFieldsError().filter(({ errors }) => errors.length).length
-            }
-          >
-            Log in
-          </Button>
-        )}
-      </Form.Item>
-    </Form>
+        <Form.Item
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Username!',
+            },
+          ]}
+        >
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Password!',
+            },
+          ]}
+        >
+          <Input
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Item>
+        <Form.Item >
+          <Row justify='space-between'>
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+
+            <Link className="login-form-forgot" to="">
+              Forgot password
+            </Link>
+          </Row>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="login-form-button" block>Log in</Button>
+        </Form.Item>
+
+        <Form.Item>
+          <Row justify='center'>Or login with</Row>
+          <Button type="primary" htmlType="submit" className="login-form-button" block danger>Google</Button>
+        </Form.Item>
+
+        <Row justify='center'><Link to="/auth/register">Register now</Link></Row>
+      </Form>
+    </div>
   );
 }
-
-// const Login2 = (props) => {
-//   const onFinish = (values) => {
-//     console.log('Success:', values);
-//   };
-
-//   const onFinishFailed = (errorInfo) => {
-//     console.log('Failed:', errorInfo);
-//   };
-
-//   return (
-//     <Form
-//       name="basic"
-//       labelCol={{
-//         span: 8,
-//       }}
-//       wrapperCol={{
-//         span: 16,
-//       }}
-//       initialValues={{
-//         remember: true,
-//       }}
-//       onFinish={onFinish}
-//       onFinishFailed={onFinishFailed}
-//       autoComplete="off"
-//     >
-//       <Form.Item
-//         label="Username"
-//         name="username"
-//         rules={[
-//           {
-//             required: true,
-//             message: 'Please input your username!',
-//           },
-//         ]}
-//       >
-//         <Input />
-//       </Form.Item>
-
-//       <Form.Item
-//         label="Password"
-//         name="password"
-//         rules={[
-//           {
-//             required: true,
-//             message: 'Please input your password!',
-//           },
-//         ]}
-//       >
-//         <Input.Password />
-//       </Form.Item>
-
-//       <Form.Item
-//         name="remember"
-//         valuePropName="checked"
-//         wrapperCol={{
-//           offset: 8,
-//           span: 16,
-//         }}
-//       >
-//         <Checkbox>Remember me</Checkbox>
-//       </Form.Item>
-
-//       <Form.Item
-//         wrapperCol={{
-//           offset: 8,
-//           span: 16,
-//         }}
-//       >
-//         <Button type="primary" htmlType="submit">
-//           Submit
-//         </Button>
-//       </Form.Item>
-//     </Form>
-//   );
-// }
 
 export default Login

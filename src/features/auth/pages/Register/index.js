@@ -11,6 +11,7 @@ import {
   Select,
 } from 'antd';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './style.less';
 const { Option } = Select;
 const residences = [
@@ -78,6 +79,19 @@ const tailFormItemLayout = {
   },
 };
 
+const buttonFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 24,
+      offset: 0,
+    },
+  },
+};
+
 Register.propTypes = {
 
 }
@@ -96,8 +110,8 @@ function Register(props) {
           width: 70,
         }}
       >
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
+        <Option value="84">+84</Option>
+        <Option value="82">+82</Option>
       </Select>
     </Form.Item>
   );
@@ -130,20 +144,37 @@ function Register(props) {
   return (
     <div className='register'>
       <Form
+        className='register__form'
         {...formItemLayout}
         form={form}
         name="register"
         onFinish={onFinish}
         initialValues={{
           residence: ['zhejiang', 'hangzhou', 'xihu'],
-          prefix: '86',
+          prefix: '84',
         }}
         scrollToFirstError
-        className='register__form'
       >
         <Form.Item
+          name="username"
+          label="Username"
+          rules={[
+            {
+              type: 'email',
+              message: 'The input is not valid E-mail!',
+            },
+            {
+              required: true,
+              message: 'Please input your E-mail!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
           name="email"
-          label="E-mail"
+          label="Email"
           rules={[
             {
               type: 'email',
@@ -343,31 +374,12 @@ function Register(props) {
             I have read the <a href="">agreement</a>
           </Checkbox>
         </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Row gutter={8}>
-            <Col span={12}>
-              <Form.Item
-                name="captcha"
-                noStyle
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input the captcha you got!',
-                  },
-                ]}
-              >
-                <Button type="primary" htmlType="submit">
-                  Register
-                </Button>
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <a href="">Already has a account</a>
-            </Col>
-          </Row>
-
+       
+        <Form.Item {...buttonFormItemLayout}>
+          <Button type="primary" htmlType="submit" block>Register</Button>
         </Form.Item>
+
+        <Row justify='center'><Link to='/auth/login'>Already has a account</Link></Row>
       </Form>
     </div>
   );
