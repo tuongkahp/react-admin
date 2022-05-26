@@ -17,13 +17,6 @@ function Auth(props) {
     <Routes>
       <Route exact path="login" element={<Login />} />
       <Route exact path="register" element={<Register />} />
-      {/* <Route exact path={`${match.url}/login`} element={<Login />} /> */}
-      {/* <Route exact path={`${match.url}/register`} component={Register} /> */}
-
-      {/* <Route path={`${match.url}/add`} component={AddEditPage} />
-      <Route path={`${match.url}/:photoId`} component={AddEditPage} /> */}
-
-      <Route component={NotFound} />
     </Routes>
   );
 }
