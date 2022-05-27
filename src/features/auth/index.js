@@ -1,18 +1,10 @@
 import React from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import NotFound from 'components/NotFound';
+import { Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { Routes } from 'react-router-dom';
-// import AddEditPage from './pages/AddEdit';
-// import MainPage from './pages/Main';
 
-Auth.propTypes = {};
-
-function Auth(props) {
-  // const match = useRouteMatch();
-  // console.log({ match });
-
+const Auth = () => {
   return (
     <Routes>
       <Route exact path="login" element={<Login />} />

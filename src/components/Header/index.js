@@ -1,31 +1,50 @@
-import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Menu, Space, Spin, Switch } from 'antd';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import React from 'react'
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
+import { Avatar, Dropdown, Menu, Space, Switch } from 'antd'
 import './style.less'
+import { useNavigate } from 'react-router-dom'
 
-const menu = (
-  <Menu
-    items={[{
-      key: '1',
-      label: 'User Infomation',
-      icon: <UserOutlined />
-    }, {
-      key: '2',
-      label: 'Settings',
-      icon: <SettingOutlined />
-    }, {
-      key: '3',
-      label: 'Logout',
-      icon: <LogoutOutlined />
-    }]}
-  />
-);
+
 
 const Header = ({ theme, changeTheme }) => {
+  const navigate = useNavigate()
   const handleChangeTheme = (value) => {
     if (changeTheme) changeTheme(value)
   }
+
+  const handleMenuClick = e => {
+    switch (e.key) {
+      case '3': {
+        localStorage.setItem('token', '')
+        localStorage.setItem('refreshToken', '')
+        sessionStorage.setItem('token', '')
+        sessionStorage.setItem('refreshToken', '')
+        navigate('/auth/login')
+        break
+      }
+      default:
+        break
+    }
+  }
+
+  const menu = (
+    <Menu
+      onClick={handleMenuClick}
+      items={[{
+        key: '1',
+        label: 'User Infomation',
+        icon: <UserOutlined />
+      }, {
+        key: '2',
+        label: 'Settings',
+        icon: <SettingOutlined />
+      }, {
+        key: '3',
+        label: 'Logout',
+        icon: <LogoutOutlined />
+      }]}
+    />
+  )
 
   return (
     <Space className='header'>
@@ -37,10 +56,6 @@ const Header = ({ theme, changeTheme }) => {
 
       <Dropdown overlay={menu} placement="bottomRight">
         <span className='header__dropdown'>
-          {/* <Avatar
-            // src={currentUser.avatar}
-            alt="avatar" />
-          <span>Admin</span> */}
           Language
         </span>
       </Dropdown>
@@ -49,7 +64,6 @@ const Header = ({ theme, changeTheme }) => {
         <span className='header__dropdown'>
           <Avatar
             className='header__avatar'
-            // src={currentUser.avatar}
             alt="avatar" />
           <span>Timble Tran</span>
         </span>
@@ -58,30 +72,11 @@ const Header = ({ theme, changeTheme }) => {
       <Switch
         checked={theme === 'dark'}
         onChange={(value) => handleChangeTheme(value)}
-        checkedChildren={<CheckOutlined />}
-        unCheckedChildren={<CloseOutlined />}
+        checkedChildren={'🌜'}
+        unCheckedChildren={'🌞'}
       />
     </Space>
   );
-};
+}
 
-const loginOut = async () => {
-  window.location.pathname = '/auth/login'
-
-  // await outLogin();
-  // const { query = {}, pathname } = history.location;
-  // const { redirect } = query; // Note: There may be security issues, please note
-
-  // if (window.location.pathname !== '/user/login' && !redirect) {
-  //   history.replace({
-  //     pathname: '/user/login',
-  //     search: stringify({
-  //       redirect: pathname,
-  //     }),
-  //   });
-  // }
-
-
-};
-
-export default Header;
+export default Header

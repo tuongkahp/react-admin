@@ -1,24 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Form, Input, message, Row } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './style.less';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { sleep } from 'utils/common';
+import { Spin } from 'antd';
+import { useSetRecoilState } from 'recoil';
+import { authState } from 'features/auth/authState';
+import { authApi } from 'apis/authApi';
 
 const Login = () => {
   const [form] = Form.useForm();
-  const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
+  const setAuth = useSetRecoilState(authState);
+  const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
 
-  useEffect(() => {
-    forceUpdate({});
-  }, []);
+  const onFinish = async (values) => {
+    var loginResult = await authApi.login({
+      username: values.username,
+      password: values.password
+    })
 
-  const onFinish = (values) => {
-    console.log('Finish:', values);
+    if (!loginResult?.status) {
+      message.error(loginResult?.description ?? 'Net work error')
+      return;
+    }
+
+    message.success(loginResult?.description)
+    setAuth(loginResult?.data)
+
+    if (values.remember) {
+      localStorage.setItem('token', loginResult.data.token)
+      localStorage.setItem('refreshToken', loginResult.data.refreshToken)
+    } else {
+      sessionStorage.setItem('token', loginResult.data.token)
+      sessionStorage.setItem('refreshToken', loginResult.data.refreshToken)
+    }
+
+    navigate(from, { replace: true });
   };
 
   return (
     <div className='login'>
       <Form
+        form={form}
         name="normal_login"
         className="login__form"
         initialValues={{
@@ -35,7 +61,9 @@ const Login = () => {
             },
           ]}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+          <Input
+            prefix={<UserOutlined />}
+            placeholder="Username" />
         </Form.Item>
         <Form.Item
           name="password"
@@ -46,9 +74,8 @@ const Login = () => {
             },
           ]}
         >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
+          <Input.Password
+            prefix={<LockOutlined />}
             placeholder="Password"
           />
         </Form.Item>
@@ -65,7 +92,10 @@ const Login = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button" block>Log in</Button>
+          <Button type="primary" htmlType="submit" className="login-form-button" block>
+            {/* {<Spin />} */}
+            Log in
+          </Button>
         </Form.Item>
 
         <Form.Item>

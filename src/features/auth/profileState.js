@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
 
-export const userState = atom({
+export const profileState = atom({
   key: 'user',
   default: localStorage.getItem('user'),
 });
@@ -8,7 +8,7 @@ export const userState = atom({
 export const currentUser = selector({
   key: 'currentUser',
   get: ({ get }) => {
-    const user = get(userState)
+    const user = get(profileState)
     return user
   }
 })

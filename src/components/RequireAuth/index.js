@@ -1,15 +1,13 @@
-import React from 'react';
-const { useLocation, Navigate } = require("react-router-dom");
+import React from 'react'
+import { useRecoilValue } from 'recoil'
+import { useLocation, Navigate } from 'react-router-dom'
+import { authState } from 'features/auth/authState'
 
 const RequireAuth = ({ children }) => {
-  let auth = {
-    user: {
-      username: 'Timble Tran'
-    }
-  };
-  let location = useLocation();
+  const auth = useRecoilValue(authState)
+  let location = useLocation()
 
-  if (!auth.user) {
+  if (!auth?.token) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
@@ -18,6 +16,6 @@ const RequireAuth = ({ children }) => {
   }
 
   return children;
-};
+}
 
-export default RequireAuth;
+export default RequireAuth

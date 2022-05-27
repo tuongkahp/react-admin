@@ -1,10 +1,11 @@
 import { FileOutlined, PieChartOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, Space, Switch } from 'antd';
+import { Layout, Menu } from 'antd';
 import Header from 'components/Header';
+import Footer from 'components/Footer';
 
 import { useState } from 'react';
 import './style.less'
-const { Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
   return {
@@ -27,7 +28,7 @@ const items = [
   getItem('Files', '9', <FileOutlined />),
 ];
 
-const BaseLayout = props => {
+const BaseLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [current, setCurrent] = useState('1');
@@ -44,56 +45,18 @@ const BaseLayout = props => {
   return (
     <Layout theme={theme} className='layout'>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-
         <div className="layout__logo" />
         <Menu theme={theme} defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
       <Layout>
         <Header theme={theme} changeTheme={changeTheme} />
-        {/* <Header className='layout__header'> */}
-        {/* <Space className='layout__header'>
-          <Switch
-            checked={theme === 'dark'}
-            onChange={changeTheme}
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-          />
-          <Header />
-        </Space> */}
-        {/* </Header> */}
-        <Content
-          style={{
-            margin: '0 16px',
-          }}
-        >
-          <Breadcrumb
-            style={{
-              margin: '16px 0',
-            }}
-          >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
-            className="site-layout-background"
-            style={{
-              padding: 24,
-              minHeight: 360,
-            }}
-          >
-            Bill is a cat.
-          </div>
+        <Content className='layout__content' >
+          {children}
         </Content>
-        <Footer className='layout__footer'>
-          LetonSoft ©2022 Created by Timber Tran
-        </Footer>
+        <Footer />
       </Layout>
     </Layout>
   );
-};
-
-BaseLayout.propTypes = {
-
 };
 
 export default BaseLayout;
