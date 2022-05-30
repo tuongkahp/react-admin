@@ -1,61 +1,129 @@
-import { FileOutlined, PieChartOutlined, UserOutlined } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
-import Header from 'components/Header';
-import Footer from 'components/Footer';
-
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Col, Dropdown, Layout, Menu, Row, Space, Switch } from 'antd';
 import './style.less'
-const { Content, Sider } = Layout;
+import {
+  ShoppingCartOutlined,
+  UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  UsergroupAddOutlined
+} from '@ant-design/icons';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { themeState } from 'recoils/themeState';
+const { Header, Sider, Content, Footer } = Layout;
 
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  };
-}
-
-const items = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <PieChartOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <PieChartOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />),
-];
+const siderMenuItems = [
+  { key: '1', label: 'Users', path: '/users', icon: <UserOutlined /> },
+  { key: '2', label: 'Groups', path: '/groups', icon: <UsergroupAddOutlined /> },
+  { key: '3', label: 'Cart', path: '/cart', icon: <ShoppingCartOutlined /> }
+]
 
 const BaseLayout = ({ children }) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [theme, setTheme] = useRecoilState(themeState)
   const [collapsed, setCollapsed] = useState(false);
-  const [theme, setTheme] = useState('dark');
-  const [current, setCurrent] = useState('1');
+  const [selectedKey, setSelectedKey] = useState(siderMenuItems.find(_item => location.pathname.startsWith(_item.path)).key)
 
   const changeTheme = (value) => {
     setTheme(value ? 'dark' : 'light');
+    localStorage.setItem('theme', value ? 'dark' : 'light')
   };
 
-  const onClick = (e) => {
-    console.log('click ', e);
-    setCurrent(e.key);
-  };
+  const onClickHeaderMenu = (item) => {
+    switch (item.key) {
+      case '3': {
+        localStorage.setItem('token', '')
+        localStorage.setItem('refreshToken', '')
+        sessionStorage.setItem('token', '')
+        sessionStorage.setItem('refreshToken', '')
+        navigate('/auth/login')
+        break
+      }
+      default:
+        break
+    }
+  }
+
+  const onClickSiderMenu = (item) => {
+    const clicked = siderMenuItems.find(x => x.key === item.key)
+    navigate(clicked.path)
+  }
+
+  useEffect(() => {
+    setSelectedKey(siderMenuItems.find(_item => location.pathname.startsWith(_item.path)).key)
+  }, [location])
+
+  const headerMenu = (
+    <Menu
+      onClick={onClickHeaderMenu}
+      items={[{
+        key: '1',
+        label: 'User Infomation',
+        icon: <UserOutlined />,
+        path: 'users'
+      }, {
+        key: '2',
+        label: 'Settings',
+        icon: <SettingOutlined />
+      }, {
+        key: '3',
+        label: 'Logout',
+        icon: <LogoutOutlined />
+      }]}
+    />
+  )
 
   return (
     <Layout theme={theme} className='layout'>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+      <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="layout__logo" />
-        <Menu theme={theme} defaultSelectedKeys={['1']} mode="inline" items={items} />
+        <Menu theme={theme} mode="inline" items={siderMenuItems} selectedKeys={[selectedKey]} onClick={onClickSiderMenu} />
       </Sider>
+
       <Layout>
-        <Header theme={theme} changeTheme={changeTheme} />
+        <Header className='layout__header' theme={theme}>
+          <Row justify="space-between">
+            <Col>
+              {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                className: 'trigger',
+                onClick: () => setCollapsed(!collapsed),
+              })}
+            </Col>
+
+            <Col>
+              <Space size='large'>
+                <Dropdown overlay={headerMenu} placement="bottomRight">
+                  <span className='layout__header__dropdown'>
+                    <Avatar
+                      icon={<UserOutlined />}
+                      className='layout__header__avatar'
+                      alt="avatar" />
+                    <span>Timble Tran</span>
+                  </span>
+                </Dropdown>
+
+                <Switch
+                  className='layout__header__switch'
+                  checked={theme === 'dark'}
+                  onChange={(value) => changeTheme(value)}
+                  checkedChildren={'🌜'}
+                  unCheckedChildren={'🌞'}
+                />
+              </Space>
+            </Col>
+          </Row>
+        </Header>
         <Content className='layout__content' >
-          {children}
+          {/* {children} */}
+          <Outlet />
         </Content>
-        <Footer />
+        <Footer className='layout__footer'> Software ©2022 Created by Timber Tran </Footer>
       </Layout>
-    </Layout>
+    </Layout >
   );
 };
 

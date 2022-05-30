@@ -3,14 +3,44 @@
 
   &__logo {
     background-color: #2980b9;
+    // height: 2rem;
+    height: 1rem;
+    margin: 1rem;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  &__header {
     height: 3rem;
+    line-height: 3rem;
+    padding: 0 1rem;
+    background-color: #fff;
+
+    &__dropdown,
+    &__switch {
+      display: flex;
+      align-items: center;
+    }
+
+    &__avatar {
+      margin-right: 0.5rem;
+    }
   }
 
   &__footer {
     text-align: center;
+    height: 1rem;
+    padding-top: 0;
   }
 
   &__content {
+    background-color: #fff;
     margin: 0 1rem;
+    margin: 1rem;
+    padding: 1rem;
+    min-height: 280px;
+  }
+
+  .trigger:hover {
+    color: #1890ff;
   }
 }
