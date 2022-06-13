@@ -36,16 +36,20 @@ const BaseLayout = ({ children }) => {
   const onClickHeaderMenu = (item) => {
     switch (item.key) {
       case '3': {
-        localStorage.setItem('token', '')
-        localStorage.setItem('refreshToken', '')
-        sessionStorage.setItem('token', '')
-        sessionStorage.setItem('refreshToken', '')
-        navigate('/auth/login')
+        logout()
         break
       }
       default:
         break
     }
+  }
+
+  const logout = () => {
+    localStorage.setItem('token', '')
+    localStorage.setItem('refreshToken', '')
+    sessionStorage.setItem('token', '')
+    sessionStorage.setItem('refreshToken', '')
+    navigate('/auth/login')
   }
 
   const onClickSiderMenu = (item) => {

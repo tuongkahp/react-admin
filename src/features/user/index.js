@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import UserList from './pages/UserList';
+import UserPage from './pages/UserPage';
 
 const User = () => {
   return (
     <Routes>
-      <Route exact path="/" element={<UserList />} />
+      <Route exact path="/" element={<UserPage />} />
     </Routes>
   );
 };
