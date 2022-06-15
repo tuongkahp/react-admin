@@ -5,13 +5,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from 'recoil';
+import LoadingOverlay from 'components/LoadingOverlay';
+import RecoilNexus from 'recoil-nexus';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <React.Suspense fallback={<>...</>}>
       <RecoilRoot>
+        <RecoilNexus />
         <BrowserRouter>
+          <LoadingOverlay />
           <App />
         </BrowserRouter>
       </RecoilRoot>
