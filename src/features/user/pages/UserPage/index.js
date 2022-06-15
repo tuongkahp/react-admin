@@ -1,111 +1,118 @@
-import { Breadcrumb, Space, Table, Tag } from 'antd';
-import React from 'react';
+import { Breadcrumb, Button, Modal, Space, Table, Tag } from 'antd';
+import axiosClient from 'apis/axiosClient';
+import { userApi } from 'apis/userApi';
+import React, { useEffect, useState } from 'react';
+import {
+  ExclamationCircleOutlined
+} from '@ant-design/icons';
+import './style.less'
+import UserInfoModal from 'features/user/components/UserInfoModal';
 
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
+const { confirm, success } = Modal;
 
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-let data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-  {
-    key: '4',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '5',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+const showDeleteConfirm = () => {
+  confirm({
+    title: 'Are you sure delete this user?',
+    icon: <ExclamationCircleOutlined />,
+    //content: 'Some descriptions',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk() {
+      console.log('OK');
+    },
+  });
+};
 
 const UserPage = () => {
+  const [visible, setVisible] = useState(false)
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
+
+  const columns = [
+    {
+      title: 'User Id',
+      dataIndex: 'userId',
+      key: 'userId',
+      // render: (text) => <a>{text}</a>,
+    }, {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+      // render: (text) => <a>{text}</a>,
+    }, {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    }, {
+      title: 'Full Name',
+      dataIndex: 'fullName',
+      key: 'fullName',
+    }, {
+      title: 'Phone Number',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+    }, {
+      title: 'Created Date',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
+    }, {
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (_, { status }) => (
+        status ? <Tag color={'green'} key={status}>ACTIVED</Tag> : <Tag color={'red'} key={status}>DEACTIVED</Tag>
+      ),
+    }, {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <a onClick={() => showUserInfoModal(record)}>Edit</a>
+          <a onClick={showDeleteConfirm}>Delete</a>
+        </Space>
+      ),
+    },
+  ];
+
+  const handleOk = (e) => {
+    console.log(e);
+    setVisible(false);
+  };
+
+  const handleCancel = (e) => {
+    console.log(e);
+    setVisible(false);
+  };
+
+  const showUserInfoModal = (userInfo) => {
+    setUser(userInfo)
+    setVisible(true)
+    console.log('userInfo', userInfo)
+  }
+
+  useEffect(() => {
+    const getUser = async () => {
+      let getUserResult = await userApi.getAll({ page: 1, count: 10 })
+      if (getUserResult.status)
+        setUsers(getUserResult.data?.users)
+    }
+
+    getUser()
+  }, [])
+
   return (
-    <>
-      {/* <Breadcrumb>
-        <Breadcrumb.Item>Home</Breadcrumb.Item>
+    <div className='user'>
+      <Breadcrumb>
+        <Breadcrumb.Item>User</Breadcrumb.Item>
         <Breadcrumb.Item>List</Breadcrumb.Item>
-        <Breadcrumb.Item>App</Breadcrumb.Item>
-      </Breadcrumb> */}
-      <Table columns={columns} dataSource={data} />
-    </>
+      </Breadcrumb>
+      <div className='user__table-filter' align='end' >
+        <Button type='primary' onClick={() => showUserInfoModal(null)}>Add new user</Button>
+      </div>
+      <Table columns={columns} dataSource={users} rowKey='userId' />
+      <UserInfoModal visible={visible} onOk={handleOk} onCancel={handleCancel} userInfo={user} />
+    </div>
   );
 };
 

@@ -5,7 +5,7 @@ const source = axios.CancelToken.source()
 
 export const userApi = {
   getAll: (params) => {
-    const url = '/users';
+    const url = '/api/users';
     return axiosClient.get(url, { params });
   }
 };

@@ -1,7 +1,6 @@
 import './App.less';
-import { Navigate, Route, Routes, } from 'react-router-dom';
-import React, { Suspense } from 'react';
-import NotFound from 'components/NotFound';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import React from 'react';
 import RequireAuth from 'components/RequireAuth';
 import BaseLayout from 'components/BaseLayout';
 
@@ -23,8 +22,7 @@ function App() {
         <Route path="users/*" element={<User />}></Route>
         <Route path="groups/*" element={<User />}></Route>
       </Route>
-
-      <Route path="*" element={<Navigate to="/users" replace />} />
+      <Route path="*" element={<Navigate to="users" />} />
     </Routes>
   );
 }
