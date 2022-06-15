@@ -80,15 +80,20 @@ const UserPage = () => {
     setVisible(false);
   };
 
+  const onCreate = (values) => {
+    console.log('Received values of form: ', values);
+    setVisible(false);
+  };
+
   const handleCancel = (e) => {
     console.log(e);
     setVisible(false);
   };
 
   const showUserInfoModal = (userInfo) => {
+    console.log('showUserInfoModal', userInfo)
     setUser(userInfo)
     setVisible(true)
-    console.log('userInfo', userInfo)
   }
 
   useEffect(() => {
@@ -111,7 +116,12 @@ const UserPage = () => {
         <Button type='primary' onClick={() => showUserInfoModal(null)}>Add new user</Button>
       </div>
       <Table columns={columns} dataSource={users} rowKey='userId' />
-      <UserInfoModal visible={visible} onOk={handleOk} onCancel={handleCancel} userInfo={user} />
+      <UserInfoModal
+        visible={visible}
+        // onOk={handleOk}
+        onCreate={onCreate}
+        onCancel={handleCancel}
+        userInfo={user} />
     </div>
   );
 };

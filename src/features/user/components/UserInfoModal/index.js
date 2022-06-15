@@ -18,11 +18,30 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const UserInfoModal = (props) => {
-  const { visible, onOk, onCancel, userInfo } = props
-  console.log('userInfo2', userInfo)
-  const handleOk = () => {
-    if (onOk) onOk()
+  const { visible, onCreate, onCancel, userInfo } = props
+  const [form] = Form.useForm();
+  const userInfo2 = {
+    username: 'test1',
+    fullName: 'test222'
   }
+  console.log('userInfo2', userInfo)
+
+  if (!userInfo?.userId)
+    form.resetFields()
+
+  // const handleOk = (userInfo) => {
+  //   const form = this.form;
+  //   form.validateFields((err, values) => {
+  //     if (err) {
+  //       return;
+  //     }
+
+  //     console.log('Received values of form: ', values);
+  //     form.resetFields();
+  //     this.setState({ visible: false });
+  //   });
+  //   if (onOk) onOk(userInfo)
+  // }
 
   const handleCancel = () => {
     if (onCancel) onCancel()
@@ -33,23 +52,49 @@ const UserInfoModal = (props) => {
       title="User information"
       width={530}
       visible={visible}
-      onOk={handleOk}
       okText={userInfo ? 'Update' : 'Add'}
+      okButtonProps={{ htmlType: 'submit' }}
       onCancel={handleCancel}
+      onOk={() => {
+        form
+          .validateFields()
+          .then((values) => {
+            form.resetFields();
+            onCreate(values);
+          })
+          .catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
     >
       <Form
-        labelCol={{ span: 8, }}
-        wrapperCol={{ span: 16, }}
+        form={form}
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
         layout="horizontal"
-        initialValues={{ userInfo }}
-      // initialValues={{ disabled: componentDisabled }}
-      // onValuesChange={onFormLayoutChange}
-      // disabled={componentDisabled}
+        initialValues={userInfo2}
       >
-        {/* <Form.Item label="Form disabled" name="disabled" valuePropName="checked">
-          <Checkbox>disabled</Checkbox>
-        </Form.Item> */}
-        <Form.Item label="Full name" name="fullName">
+        <Form.Item
+          label="Username"
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: 'Please input the username',
+            },
+          ]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Full name"
+          name="fullName"
+          rules={[
+            {
+              required: true,
+              message: 'Please input the full name',
+            },
+          ]}>
           <Input />
         </Form.Item>
 
@@ -68,67 +113,6 @@ const UserInfoModal = (props) => {
         <Form.Item label="Confirm password" name='confirmPassword'>
           <Input />
         </Form.Item>
-
-        {/* <Form.Item label="Radio">
-          <Radio.Group>
-            <Radio value="male"> Male </Radio>
-            <Radio value="female"> Female </Radio>
-          </Radio.Group>
-        </Form.Item> */}
-
-        {/* <Form.Item label="Select">
-          <Select>
-            <Select.Option value="demo">Demo</Select.Option>
-          </Select>
-        </Form.Item> */}
-        {/* <Form.Item label="TreeSelect">
-          <TreeSelect
-            treeData={[
-              {
-                title: 'Light',
-                value: 'light',
-                children: [
-                  {
-                    title: 'Bamboo',
-                    value: 'bamboo',
-                  },
-                ],
-              },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="Cascader">
-          <Cascader
-            options={[
-              {
-                value: 'zhejiang',
-                label: 'Zhejiang',
-                children: [
-                  {
-                    value: 'hangzhou',
-                    label: 'Hangzhou',
-                  },
-                ],
-              },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="DatePicker">
-          <DatePicker />
-        </Form.Item>
-
-        <Form.Item label="InputNumber">
-          <InputNumber />
-        </Form.Item>
-        <Form.Item label="TextArea">
-          <TextArea rows={4} />
-        </Form.Item>
-        <Form.Item label="Switch" valuePropName="checked">
-          <Switch />
-        </Form.Item> */}
-        {/* <Form.Item label="Button">
-          <Button>{userInfo ? 'Update' : 'Add'}</Button>
-        </Form.Item> */}
       </Form>
     </Modal>
   );
