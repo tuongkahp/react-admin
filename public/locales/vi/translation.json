@@ -1,0 +1,12 @@
+{
+  "error": {
+    "required": "Trường này là bắt buộc",
+    "confirmPasswordIncorrect": "Xác nhận mật khẩu không đúng"
+  },
+  "confirm": "Xác nhận",
+  "cancel": "Hủy",
+  "oldPassword": "Mật khẩu cũ",
+  "newPassword": "Mật khẩu mới",
+  "confirmPassword": "Xác nhận mật khẩu",
+  "changePassword": "Đổi mật khẩu"
+}

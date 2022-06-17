@@ -7,10 +7,10 @@ export const authApi = {
   },
   register: (params) => {
     const url = '/api/auth/register'
-    return axiosClient.post(url, { params });
+    return axiosClient.post(url, params);
   },
   changePassword: (params) => {
     const url = '/api/auth/change-password'
-    return axiosClient.post(url, { params });
+    return axiosClient.post(url, params);
   },
 };

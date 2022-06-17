@@ -7,11 +7,12 @@ import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from 'recoil';
 import LoadingOverlay from 'components/LoadingOverlay';
 import RecoilNexus from 'recoil-nexus';
+import './i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <React.Suspense fallback={<>...</>}>
+    <React.Suspense fallback={<>Loading...</>}>
       <RecoilRoot>
         <RecoilNexus />
         <BrowserRouter>

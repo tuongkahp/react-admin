@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Col, Dropdown, Layout, Menu, Row, Space, Switch } from 'antd';
+import { Avatar, Button, Col, Dropdown, Layout, Menu, message, Row, Select, Space, Switch } from 'antd';
 import './style.less'
 import {
   ShoppingCartOutlined,
   UserOutlined,
+  GlobalOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
@@ -13,7 +14,13 @@ import {
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { themeState } from 'recoils/themeState';
+import ChangePasswordModal from 'components/ChangePasswordModal';
+import i18n from 'i18n.js';
+import { changeLanguage, t } from 'i18next';
+import { authApi } from 'apis/authApi';
+
 const { Header, Sider, Content, Footer } = Layout;
+const { Option } = Select;
 
 const siderMenuItems = [
   { key: '1', label: 'Users', path: '/users', icon: <UserOutlined /> },
@@ -27,6 +34,7 @@ const BaseLayout = ({ children }) => {
   const [theme, setTheme] = useRecoilState(themeState)
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState(siderMenuItems.find(_item => location.pathname.startsWith(_item.path)).key)
+  const [visible, setVisible] = useState(false)
 
   const changeTheme = (value) => {
     setTheme(value ? 'dark' : 'light');
@@ -35,6 +43,10 @@ const BaseLayout = ({ children }) => {
 
   const onClickHeaderMenu = (item) => {
     switch (item.key) {
+      case '2': {
+        showChangePasswordModal()
+        break
+      }
       case '3': {
         logout()
         break
@@ -43,6 +55,37 @@ const BaseLayout = ({ children }) => {
         break
     }
   }
+
+  const handleChangeLanguage = (item) => {
+    i18n.changeLanguage(item.key)
+  }
+
+  const showChangePasswordModal = () => {
+    setVisible(true)
+  }
+
+  const handleChangePassword = async (values) => {
+    console.log('Chaneg pass value: ', values);
+
+    let changePasswordResult = await authApi.changePassword({
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    })
+
+    if (!changePasswordResult?.status) {
+      message.error(changePasswordResult?.description ?? 'Net work error')
+      return;
+    }
+
+    message.success(changePasswordResult?.description)
+
+    // Hide modal
+    setVisible(false);
+  };
+
+  const onCancel = (e) => {
+    setVisible(false);
+  };
 
   const logout = () => {
     localStorage.setItem('token', '')
@@ -61,6 +104,23 @@ const BaseLayout = ({ children }) => {
     setSelectedKey(siderMenuItems.find(_item => location.pathname.startsWith(_item.path)).key)
   }, [location])
 
+  const languageMenu = (
+    <Menu
+      onClick={handleChangeLanguage}
+      items={[
+        {
+          key: 'en',
+          label: 'English',
+          icon: <UserOutlined />
+        }, {
+          key: 'vi',
+          label: 'Việt Nam',
+          icon: <SettingOutlined />
+        }
+      ]}
+    />
+  )
+
   const headerMenu = (
     <Menu
       onClick={onClickHeaderMenu}
@@ -71,7 +131,7 @@ const BaseLayout = ({ children }) => {
         path: 'users'
       }, {
         key: '2',
-        label: 'Settings',
+        label: t('changePassword'),
         icon: <SettingOutlined />
       }, {
         key: '3',
@@ -90,6 +150,12 @@ const BaseLayout = ({ children }) => {
 
       <Layout>
         <Header className='layout__header' theme={theme}>
+          <ChangePasswordModal
+            visible={visible}
+            onCancel={onCancel}
+            onOk={handleChangePassword}
+          />
+
           <Row justify="space-between">
             <Col>
               {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
@@ -100,7 +166,11 @@ const BaseLayout = ({ children }) => {
 
             <Col>
               <Space size='large'>
-                <Dropdown overlay={headerMenu} placement="bottomRight">
+                <Dropdown overlay={languageMenu}>
+                  <Button className='layout__header__dropdown'>Language</Button>
+                </Dropdown>
+
+                <Dropdown overlay={headerMenu}>
                   <span className='layout__header__dropdown'>
                     <Avatar
                       icon={<UserOutlined />}
@@ -122,7 +192,6 @@ const BaseLayout = ({ children }) => {
           </Row>
         </Header>
         <Content className='layout__content' >
-          {/* {children} */}
           <Outlet />
         </Content>
         <Footer className='layout__footer'> Software ©2022 Created by Timber Tran </Footer>

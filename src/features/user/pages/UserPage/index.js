@@ -27,7 +27,8 @@ const showDeleteConfirm = () => {
 const UserPage = () => {
   const [visible, setVisible] = useState(false)
   const [users, setUsers] = useState([]);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
+  // let user = {}
 
   const columns = [
     {
@@ -75,23 +76,16 @@ const UserPage = () => {
     },
   ];
 
-  const handleOk = (e) => {
-    console.log(e);
-    setVisible(false);
-  };
-
   const onCreate = (values) => {
     console.log('Received values of form: ', values);
     setVisible(false);
   };
 
-  const handleCancel = (e) => {
-    console.log(e);
+  const onCancel = (e) => {
     setVisible(false);
   };
 
   const showUserInfoModal = (userInfo) => {
-    console.log('showUserInfoModal', userInfo)
     setUser(userInfo)
     setVisible(true)
   }
@@ -113,15 +107,14 @@ const UserPage = () => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
       <div className='user__table-filter' align='end' >
-        <Button type='primary' onClick={() => showUserInfoModal(null)}>Add new user</Button>
+        <Button type='primary' onClick={() => showUserInfoModal({})}>Add new user</Button>
       </div>
       <Table columns={columns} dataSource={users} rowKey='userId' />
       <UserInfoModal
         visible={visible}
-        // onOk={handleOk}
         onCreate={onCreate}
-        onCancel={handleCancel}
-        userInfo={user} />
+        onCancel={onCancel}
+        userId={user.userId} />
     </div>
   );
 };

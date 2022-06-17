@@ -1,0 +1,12 @@
+{
+  "error": {
+    "required": "This field is required",
+    "confirmPasswordIncorrect": "Confirm new password is incorrect"
+  },
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "oldPassword": "Old password",
+  "newPassword": "New password",
+  "confirmPassword": "Confirm password",
+  "changePassword": "Change password"
+}

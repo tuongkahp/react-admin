@@ -1,63 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  Button,
-  Cascader,
-  Checkbox,
-  DatePicker,
   Form,
   Input,
-  InputNumber,
   Modal,
-  Radio,
-  Select,
-  Switch,
-  TreeSelect,
 } from 'antd';
-import { useState } from 'react';
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
+import { userApi } from 'apis/userApi';
 
-const UserInfoModal = (props) => {
-  const { visible, onCreate, onCancel, userInfo } = props
+const UserInfoModal = ({ visible, onCreate, onCancel, userId }) => {
   const [form] = Form.useForm();
-  const userInfo2 = {
-    username: 'test1',
-    fullName: 'test222'
-  }
-  console.log('userInfo2', userInfo)
 
-  if (!userInfo?.userId)
+  useEffect(() => {
+    if (!userId) {
+      return
+    }
+
+    const getUserDetail = async () => {
+      let getUserDetailResult = await userApi.getDetail(userId)
+      if (getUserDetailResult.status)
+        form.setFieldsValue(getUserDetailResult.data)
+    }
+
+    getUserDetail()
+  })
+
+  useEffect(() => {
     form.resetFields()
-
-  // const handleOk = (userInfo) => {
-  //   const form = this.form;
-  //   form.validateFields((err, values) => {
-  //     if (err) {
-  //       return;
-  //     }
-
-  //     console.log('Received values of form: ', values);
-  //     form.resetFields();
-  //     this.setState({ visible: false });
-  //   });
-  //   if (onOk) onOk(userInfo)
-  // }
-
-  const handleCancel = () => {
-    if (onCancel) onCancel()
-  }
+  }, [visible])
 
   return (
     <Modal
+      visible={visible}
+      maskClosable={false}
       title="User information"
       width={530}
-      visible={visible}
-      okText={userInfo ? 'Update' : 'Add'}
-      okButtonProps={{ htmlType: 'submit' }}
-      onCancel={handleCancel}
+      okText={userId ? 'Update' : 'Add'}
+      onCancel={onCancel}
       onOk={() => {
-        form
-          .validateFields()
+        form.validateFields()
           .then((values) => {
             form.resetFields();
             onCreate(values);
@@ -70,9 +49,8 @@ const UserInfoModal = (props) => {
       <Form
         form={form}
         labelCol={{ span: 8 }}
+        labelAlign='left'
         wrapperCol={{ span: 16 }}
-        layout="horizontal"
-        initialValues={userInfo2}
       >
         <Form.Item
           label="Username"
@@ -80,8 +58,8 @@ const UserInfoModal = (props) => {
           rules={[
             {
               required: true,
-              message: 'Please input the username',
-            },
+              message: 'Please input the username'
+            }
           ]}>
           <Input />
         </Form.Item>
@@ -89,29 +67,72 @@ const UserInfoModal = (props) => {
         <Form.Item
           label="Full name"
           name="fullName"
+          rules={[{
+            required: true,
+            message: 'Please input the full name'
+          }]}>
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Email"
+          name='email'
           rules={[
             {
               required: true,
-              message: 'Please input the full name',
+              message: 'Please input the email',
             },
+            {
+              type: 'email',
+              message: 'Email is invalid'
+            }
           ]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="Email" name='email'>
+        <Form.Item
+          label="Phone number"
+          name='phoneNumber'
+          rules={[
+            {
+              required: true,
+              message: 'Please input the phone number',
+            },
+            {
+              type: 'email'
+            }
+          ]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="Phone number" name='phoneNumber'>
-          <Input />
+        <Form.Item label="Password" name='password'
+          rules={[
+            {
+              required: true,
+              message: 'Please input the password',
+            }
+          ]}>
+          <Input.Password />
         </Form.Item>
 
-        <Form.Item label="Password" name='password'>
-          <Input />
-        </Form.Item>
-
-        <Form.Item label="Confirm password" name='confirmPassword'>
-          <Input />
+        <Form.Item
+          label="Confirm password"
+          name='confirmPassword'
+          rules={[
+            {
+              required: true,
+              message: 'Please input the confirm password',
+            },
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject('The two passwords that you entered do not match!');
+              },
+            })
+          ]}>
+          <Input.Password />
         </Form.Item>
       </Form>
     </Modal>
