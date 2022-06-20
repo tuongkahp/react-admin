@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRecoilValue } from 'recoil'
 import { useLocation, Navigate } from 'react-router-dom'
-import { authState } from 'features/auth/authState'
+import { authState } from 'recoils/authState'
 
 const RequireAuth = ({ children }) => {
   const auth = useRecoilValue(authState)

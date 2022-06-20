@@ -25,7 +25,7 @@ const ChangePasswordModal = ({ visible, onOk, onCancel }) => {
       onOk={() => {
         form.validateFields()
           .then((values) => {
-            form.resetFields();
+            //form.resetFields();
             onOk(values);
           })
           .catch((info) => {

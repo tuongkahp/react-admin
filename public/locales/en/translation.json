@@ -8,5 +8,7 @@
   "oldPassword": "Old password",
   "newPassword": "New password",
   "confirmPassword": "Confirm password",
-  "changePassword": "Change password"
+  "changePassword": "Change password",
+  "login": "Login",
+  "logout": "Logout"
 }

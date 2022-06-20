@@ -13,4 +13,12 @@ export const authApi = {
     const url = '/api/auth/change-password'
     return axiosClient.post(url, params);
   },
+  refreshToken: (refreshToken) => {
+    const url = '/api/auth/refresh-token'
+    return axiosClient.post(url, {}, {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`
+      }
+    });
+  }
 };

@@ -57,6 +57,7 @@ const BaseLayout = ({ children }) => {
   }
 
   const handleChangeLanguage = (item) => {
+    console.log('handleChangeLanguage: ', item.key);
     i18n.changeLanguage(item.key)
   }
 
@@ -135,7 +136,7 @@ const BaseLayout = ({ children }) => {
         icon: <SettingOutlined />
       }, {
         key: '3',
-        label: 'Logout',
+        label: t('logout'),
         icon: <LogoutOutlined />
       }]}
     />

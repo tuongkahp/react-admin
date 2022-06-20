@@ -6,8 +6,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { sleep } from 'utils/common';
 import { Spin } from 'antd';
 import { useSetRecoilState } from 'recoil';
-import { authState } from 'features/auth/authState';
 import { authApi } from 'apis/authApi';
+import { authState } from 'recoils/authState';
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -15,6 +15,9 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
+
+  console.log('login')
+  // message.success('test')
 
   const onFinish = async (values) => {
     var loginResult = await authApi.login({
