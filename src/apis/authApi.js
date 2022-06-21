@@ -5,6 +5,10 @@ export const authApi = {
     const url = '/api/auth/login'
     return axiosClient.post(url, params);
   },
+  logout: () => {
+    const url = '/api/auth/logout'
+    return axiosClient.post(url);
+  },
   register: (params) => {
     const url = '/api/auth/register'
     return axiosClient.post(url, params);

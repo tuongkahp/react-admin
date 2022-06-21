@@ -4,7 +4,6 @@ import './style.less'
 import {
   ShoppingCartOutlined,
   UserOutlined,
-  GlobalOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
@@ -12,15 +11,15 @@ import {
   UsergroupAddOutlined
 } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { themeState } from 'recoils/themeState';
 import ChangePasswordModal from 'components/ChangePasswordModal';
-import i18n from 'i18n.js';
 import { changeLanguage, t } from 'i18next';
 import { authApi } from 'apis/authApi';
+import { authState } from 'recoils/authState';
+
 
 const { Header, Sider, Content, Footer } = Layout;
-const { Option } = Select;
 
 const siderMenuItems = [
   { key: '1', label: 'Users', path: '/users', icon: <UserOutlined /> },
@@ -35,6 +34,7 @@ const BaseLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState(siderMenuItems.find(_item => location.pathname.startsWith(_item.path)).key)
   const [visible, setVisible] = useState(false)
+  const setAuth = useSetRecoilState(authState)
 
   const changeTheme = (value) => {
     setTheme(value ? 'dark' : 'light');
@@ -57,8 +57,7 @@ const BaseLayout = ({ children }) => {
   }
 
   const handleChangeLanguage = (item) => {
-    console.log('handleChangeLanguage: ', item.key);
-    i18n.changeLanguage(item.key)
+    changeLanguage(item.key)
   }
 
   const showChangePasswordModal = () => {
@@ -67,6 +66,11 @@ const BaseLayout = ({ children }) => {
 
   const handleChangePassword = async (values) => {
     console.log('Chaneg pass value: ', values);
+
+    authApi.changePassword({
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    })
 
     let changePasswordResult = await authApi.changePassword({
       oldPassword: values.oldPassword,
@@ -89,10 +93,7 @@ const BaseLayout = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.setItem('token', '')
-    localStorage.setItem('refreshToken', '')
-    sessionStorage.setItem('token', '')
-    sessionStorage.setItem('refreshToken', '')
+    setAuth(null)
     navigate('/auth/login')
   }
 

@@ -10,5 +10,6 @@
   "confirmPassword": "Confirm password",
   "changePassword": "Change password",
   "login": "Login",
-  "logout": "Logout"
+  "logout": "Logout",
+  "unauthorized": "End of login session"
 }

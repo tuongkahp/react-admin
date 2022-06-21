@@ -31,15 +31,15 @@ const Login = () => {
     }
 
     message.success(loginResult?.description)
-    setAuth(loginResult?.data)
+    setAuth({ ...loginResult?.data, remember: values.remember })
 
-    if (values.remember) {
-      localStorage.setItem('token', loginResult.data.token)
-      localStorage.setItem('refreshToken', loginResult.data.refreshToken)
-    } else {
-      sessionStorage.setItem('token', loginResult.data.token)
-      sessionStorage.setItem('refreshToken', loginResult.data.refreshToken)
-    }
+    // if (values.remember) {
+    //   localStorage.setItem('token', loginResult.data.token)
+    //   localStorage.setItem('refreshToken', loginResult.data.refreshToken)
+    // } else {
+    //   sessionStorage.setItem('token', loginResult.data.token)
+    //   sessionStorage.setItem('refreshToken', loginResult.data.refreshToken)
+    // }
 
     navigate(from, { replace: true });
   };

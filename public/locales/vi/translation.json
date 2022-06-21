@@ -10,5 +10,6 @@
   "confirmPassword": "Xác nhận mật khẩu",
   "changePassword": "Đổi mật khẩu",
   "login": "Đăng nhập",
-  "logout": "Đăng xuất"
+  "logout": "Đăng xuất",
+  "unauthorized": "Hết phiên đăng nhập"
 }

@@ -13,7 +13,7 @@ const history = createBrowserHistory();
 let isRefreshing = false
 let failedQueue = []
 
-const processQueue = (error, token = null) => {
+const processQueue = (error, token) => {
   failedQueue.forEach(prom => {
     if (error) {
       prom.reject(error)
@@ -66,21 +66,8 @@ axiosClient.interceptors.response.use((response) => {
   const originalConfig = error.config
 
   if (error.response.status === 401) {
-    if (originalConfig._retry) {
-      // authenticationStore.logout()
-      //   .finally(() => {
-      //     history.push({
-      //       pathname: PAGES.LOGIN.PATH,
-      //       state: { from: window.location.pathname },
-      //     })
-      //   })
-      // notification.error({
-      //   message: <ColorText fontSize={'20px'} color={ERROR_COLOR}>{ERROR_TITLE}</ColorText>,
-      //   description: 'Phiên đăng nhập hết hạn',
-      // })
-
+    if (originalConfig._retry)
       return Promise.reject(error);
-    }
 
     try {
       if (isRefreshing) {
@@ -99,10 +86,18 @@ axiosClient.interceptors.response.use((response) => {
       isRefreshing = true
 
       console.log('Refresh token then retry')
-
-      let refreshTokenResult = await authApi.refreshToken(getRecoil(authState).refreshToken)
-      if (!refreshTokenResult?.status)
+      debugger
+      const auth = getRecoil(authState)
+      let refreshTokenResult = await authApi.refreshToken(auth.refreshToken)
+      if (!refreshTokenResult?.status || !refreshTokenResult.data)
         return Promise.reject(error)
+
+      setRecoil(authState, refreshTokenResult.data)
+      processQueue(null, refreshTokenResult.data.token)
+      isRefreshing = false
+
+      originalConfig.headers['Authorization'] = 'Bearer ' + refreshTokenResult.data.token
+      return axios(originalConfig)
 
 
       // authenticationStore.handleRefreshToken({ RefreshToken: localStorage.getItem('refreshToken') })
