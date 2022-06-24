@@ -4,10 +4,10 @@ import { useRecoilValue } from 'recoil';
 import { loadingState } from 'recoils/loadingState'
 import './style.less'
 
-const LoadingOverlay = () => {
+const LoadingOverlay = ({ isSuspense }) => {
   const appLoading = useRecoilValue(loadingState)
   return (
-    appLoading > 0 &&
+    (appLoading > 0 || isSuspense) &&
     <div className='loading-overlay'>
       <Spin size={'large'} />
     </div>

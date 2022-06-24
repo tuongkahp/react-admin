@@ -4,7 +4,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 import { getRecoil, setRecoil } from "recoil-nexus";
 import { authState } from 'recoils/authState';
-import { i18nState } from 'recoils/i18nState';
+import { localeState } from 'recoils/localeState';
 import { loadingState } from 'recoils/loadingState';
 import { createBrowserHistory } from 'history';
 import { authApi } from './authApi';
@@ -36,7 +36,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (request) => {
   // Handle token here ...
   // console.log('request: ' + request?.url, request.data)
-  request.headers['Accept-Language'] = getRecoil(i18nState)
+  request.headers['Accept-Language'] = getRecoil(localeState)
   const auth = getRecoil(authState)
 
   if (auth?.token && !request?.headers?.Authorization)

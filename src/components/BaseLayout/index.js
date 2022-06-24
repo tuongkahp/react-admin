@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Col, Dropdown, Layout, Menu, message, Row, Select, Space, Switch } from 'antd';
+import { Avatar, Button, Calendar, Col, ConfigProvider, Dropdown, Layout, Menu, message, Radio, Row, Select, Space, Switch } from 'antd';
 import './style.less'
 import {
   ShoppingCartOutlined,
@@ -17,7 +17,12 @@ import ChangePasswordModal from 'components/ChangePasswordModal';
 import { changeLanguage, t } from 'i18next';
 import { authApi } from 'apis/authApi';
 import { authState } from 'recoils/authState';
-
+import moment from 'moment';
+import enUS from 'antd/lib/locale/en_US';
+import viVN from 'antd/lib/locale/vi_VN';
+// import { getRecoil, setRecoil } from 'recoil-nexus';
+import { localeState } from 'recoils/localeState';
+import { I18N_LANGUAGE } from 'utils/constant';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -35,6 +40,7 @@ const BaseLayout = ({ children }) => {
   const [selectedKey, setSelectedKey] = useState(siderMenuItems.find(_item => location.pathname.startsWith(_item.path)).key)
   const [visible, setVisible] = useState(false)
   const setAuth = useSetRecoilState(authState)
+  const [locale, setLocale] = useRecoilState(localeState)
 
   const changeTheme = (value) => {
     setTheme(value ? 'dark' : 'light');
@@ -57,6 +63,8 @@ const BaseLayout = ({ children }) => {
   }
 
   const handleChangeLanguage = (item) => {
+    console.log('handleChangeLanguage', item)
+    setLocale(item.key === I18N_LANGUAGE.EN.key ? enUS : viVN)
     changeLanguage(item.key)
   }
 
@@ -111,12 +119,12 @@ const BaseLayout = ({ children }) => {
       onClick={handleChangeLanguage}
       items={[
         {
-          key: 'en',
-          label: 'English',
+          key: I18N_LANGUAGE.EN.key,
+          label: I18N_LANGUAGE.EN.title,
           icon: <UserOutlined />
         }, {
-          key: 'vi',
-          label: 'Việt Nam',
+          key: I18N_LANGUAGE.VN.key,
+          label: I18N_LANGUAGE.VN.title,
           icon: <SettingOutlined />
         }
       ]}
@@ -143,7 +151,23 @@ const BaseLayout = ({ children }) => {
     />
   )
 
+  // const [locale, setLocal] = useState(enUS);
+
+  const changeLocale = (e) => {
+    const localeValue = e.target.value;
+    changeLanguage(localeValue.locale)
+    setLocale(localeValue);
+    // setRecoil( localeValue)
+
+    if (!localeValue) {
+      moment.locale('en');
+    } else {
+      moment.locale('vi');
+    }
+  };
+
   return (
+    // <ConfigProvider locale={getRecoil(localeState)}>
     <Layout theme={theme} className='layout'>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="layout__logo" />
@@ -168,6 +192,15 @@ const BaseLayout = ({ children }) => {
 
             <Col>
               <Space size='large'>
+                <Radio.Group value={locale} onChange={changeLocale}>
+                  <Radio.Button key="en" value={enUS}>
+                    English
+                  </Radio.Button>
+                  <Radio.Button key="vi" value={viVN}>
+                    Việt Nam
+                  </Radio.Button>
+                </Radio.Group>
+
                 <Dropdown overlay={languageMenu}>
                   <Button className='layout__header__dropdown'>Language</Button>
                 </Dropdown>
@@ -196,9 +229,10 @@ const BaseLayout = ({ children }) => {
         <Content className='layout__content' >
           <Outlet />
         </Content>
-        <Footer className='layout__footer'> Software ©2022 Created by Timber Tran </Footer>
+        <Footer className='layout__footer'> Software ©2022 Created by Timber Tech </Footer>
       </Layout>
     </Layout >
+    // </ConfigProvider>
   );
 };
 

@@ -5,11 +5,17 @@
   },
   "confirm": "Confirm",
   "cancel": "Cancel",
+  "yes": "Yes",
+  "no": "No",
   "oldPassword": "Old password",
   "newPassword": "New password",
   "confirmPassword": "Confirm password",
   "changePassword": "Change password",
   "login": "Login",
   "logout": "Logout",
-  "unauthorized": "End of login session"
+  "unauthorized": "End of login session",
+  "alertDeleteUser": "Are you sure delete this user?",
+  "createdDate": "Created date",
+  "username": "Username",
+  "addNewUser": "Add new user"
 }

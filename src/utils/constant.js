@@ -1,10 +1,10 @@
 export const I18N_LANGUAGE = {
   VN: {
-    key: 'vi-VN',
+    key: 'vi',
     title: 'Việt Nam'
   },
   EN: {
-    key: 'en-US',
+    key: 'en',
     title: 'English'
   }
 }

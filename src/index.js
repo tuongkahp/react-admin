@@ -6,22 +6,24 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from 'recoil';
 import LoadingOverlay from 'components/LoadingOverlay';
-import RecoilNexus from 'recoil-nexus';
+import RecoilNexus, { getRecoil } from 'recoil-nexus';
 import './i18n';
+import { ConfigProvider } from 'antd';
+import { localeState } from 'recoils/localeState';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <React.Suspense fallback={<>Loading...</>}>
-      <RecoilRoot>
-        <RecoilNexus />
-        <BrowserRouter>
-          <LoadingOverlay />
-          <App />
-        </BrowserRouter>
-      </RecoilRoot>
+  // <React.StrictMode>
+  <RecoilRoot>
+    <RecoilNexus />
+    <React.Suspense fallback={<LoadingOverlay isSuspense={true} />}>
+      <BrowserRouter>
+        <LoadingOverlay />
+        <App />
+      </BrowserRouter>
     </React.Suspense>
-  </React.StrictMode>
+  </RecoilRoot>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

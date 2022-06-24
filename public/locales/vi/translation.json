@@ -5,11 +5,17 @@
   },
   "confirm": "Xác nhận",
   "cancel": "Hủy",
+  "yes": "Đồng ý",
+  "no": "Không",
   "oldPassword": "Mật khẩu cũ",
   "newPassword": "Mật khẩu mới",
   "confirmPassword": "Xác nhận mật khẩu",
   "changePassword": "Đổi mật khẩu",
   "login": "Đăng nhập",
   "logout": "Đăng xuất",
-  "unauthorized": "Hết phiên đăng nhập"
+  "unauthorized": "Hết phiên đăng nhập",
+  "alertDeleteUser": "Bạn có chắc chắn xóa người dùng này?",
+  "createdDate": "Ngày tạo",
+  "username": "Tên đăng nhập",
+  "addNewUser": "Thêm người dùng"
 }

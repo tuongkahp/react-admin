@@ -1,46 +1,37 @@
-import { Breadcrumb, Button, Modal, Space, Table, Tag } from 'antd';
-import axiosClient from 'apis/axiosClient';
+import { Breadcrumb, Button, Col, DatePicker, Input, Modal, Pagination, Row, Space, Table, Tag } from 'antd';
 import { userApi } from 'apis/userApi';
 import React, { useEffect, useState } from 'react';
 import {
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  SearchOutlined
 } from '@ant-design/icons';
 import './style.less'
 import UserInfoModal from 'features/user/components/UserInfoModal';
+import { useTranslation } from 'react-i18next';
 
-const { confirm, success } = Modal;
-
-const showDeleteConfirm = () => {
-  confirm({
-    title: 'Are you sure delete this user?',
-    icon: <ExclamationCircleOutlined />,
-    //content: 'Some descriptions',
-    okText: 'Yes',
-    okType: 'danger',
-    cancelText: 'No',
-    onOk() {
-      console.log('OK');
-    },
-  });
-};
+const { confirm } = Modal;
+const { RangePicker } = DatePicker;
 
 const UserPage = () => {
   const [visible, setVisible] = useState(false)
-  const [users, setUsers] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
+    total: 0
+  });
   const [user, setUser] = useState({});
-  // let user = {}
+  const { t } = useTranslation();
 
   const columns = [
     {
       title: 'User Id',
       dataIndex: 'userId',
       key: 'userId',
-      // render: (text) => <a>{text}</a>,
     }, {
       title: 'Username',
       dataIndex: 'username',
       key: 'username',
-      // render: (text) => <a>{text}</a>,
     }, {
       title: 'Email',
       dataIndex: 'email',
@@ -70,7 +61,7 @@ const UserPage = () => {
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => showUserInfoModal(record)}>Edit</a>
-          <a onClick={showDeleteConfirm}>Delete</a>
+          <a onClick={() => showDeleteConfirm(record)}>Delete</a>
         </Space>
       ),
     },
@@ -90,15 +81,35 @@ const UserPage = () => {
     setVisible(true)
   }
 
-  useEffect(() => {
-    const getUser = async () => {
-      let getUserResult = await userApi.getAll({ page: 1, count: 10 })
-      if (getUserResult.status)
-        setUsers(getUserResult.data?.users)
-    }
+  const showDeleteConfirm = () => {
+    confirm({
+      title: t('alertDeleteUser'),
+      icon: <ExclamationCircleOutlined />,
+      okText: t('yes'),
+      okType: 'danger',
+      cancelText: t('no'),
+      onOk() {
+        console.log('OK');
+      },
+    });
+  };
 
-    getUser()
-  }, [])
+  const handlePaginationChange = async (page, pageSize) => {
+    setPagination({ ...pagination, page: page, pageSize: pageSize })
+  };
+
+  const getUser = async (page, pageSize) => {
+    let getUserResult = await userApi.getAll({ page: page, count: pageSize })
+    if (!getUserResult.status)
+      return
+
+    setUserData(getUserResult.data?.users)
+    setPagination({ ...pagination, total: getUserResult.data?.total })
+  }
+
+  useEffect(() => {
+    getUser(pagination.page, pagination.pageSize)
+  }, [pagination.page, pagination.pageSize])
 
   return (
     <div className='user'>
@@ -107,15 +118,31 @@ const UserPage = () => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
       <div className='user__table-filter' align='end' >
-        <Button type='primary' onClick={() => showUserInfoModal({})}>Add new user</Button>
+        <Row justify="space-between">
+          <Col span={6}><Space>{t('createdDate')}<RangePicker /></Space></Col>
+          <Col span={6}><Space>{t('username')}<Input /></Space></Col>
+          <Col span={6}> <Button icon={<SearchOutlined />}> Search </Button></Col>
+          {/* <Col span={6}> <Button type='primary' onClick={() => showUserInfoModal({})}>{t('addNewUser')}</Button></Col> */}
+        </Row>
       </div>
-      <Table columns={columns} dataSource={users} rowKey='userId' />
+      <Table
+        columns={columns}
+        dataSource={userData}
+        rowKey={record => record.userId}
+        pagination={false}
+      />
+      <Pagination className='user__pagination'
+        current={pagination.page}
+        total={pagination.total}
+        pageSize={pagination.pageSize}
+        onChange={handlePaginationChange}
+      />
       <UserInfoModal
         visible={visible}
         onCreate={onCreate}
         onCancel={onCancel}
         userId={user.userId} />
-    </div>
+    </div >
   );
 };
 
