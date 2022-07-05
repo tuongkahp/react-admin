@@ -1,10 +1,50 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Form,
   Input,
   Modal,
+  TreeSelect
 } from 'antd';
 import { userApi } from 'apis/userApi';
+import { t } from 'i18next';
+
+const { SHOW_PARENT } = TreeSelect;
+const treeData = [
+  {
+    title: 'Node1',
+    value: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: 'Child Node1',
+        value: '0-0-0',
+        key: '0-0-0',
+      },
+    ],
+  },
+  {
+    title: 'Node2',
+    value: '0-1',
+    key: '0-1',
+    children: [
+      {
+        title: 'Child Node3',
+        value: '0-1-0',
+        key: '0-1-0',
+      },
+      {
+        title: 'Child Node4',
+        value: '0-1-1',
+        key: '0-1-1',
+      },
+      {
+        title: 'Child Node5',
+        value: '0-1-2',
+        key: '0-1-2',
+      },
+    ],
+  },
+];
 
 const UserInfoModal = ({ visible, onCreate, onCancel, userId }) => {
   const [form] = Form.useForm();
@@ -17,7 +57,7 @@ const UserInfoModal = ({ visible, onCreate, onCancel, userId }) => {
     const getUserDetail = async () => {
       let getUserDetailResult = await userApi.getDetail(userId)
       if (getUserDetailResult.status)
-        form.setFieldsValue(getUserDetailResult.data)
+        form.setFieldsValue(getUserDetailResult?.data?.user)
     }
 
     getUserDetail()
@@ -27,13 +67,32 @@ const UserInfoModal = ({ visible, onCreate, onCancel, userId }) => {
     form.resetFields()
   }, [visible])
 
+  const [value, setValue] = useState(['0-0-0']);
+
+  const onChange = (newValue) => {
+    console.log('onChange ', value);
+    setValue(newValue);
+  };
+
+  const tProps = {
+    treeData,
+    value,
+    onChange,
+    treeCheckable: true,
+    showCheckedStrategy: SHOW_PARENT,
+    placeholder: 'Please select',
+    style: {
+      width: '100%',
+    },
+  };
+
   return (
     <Modal
       visible={visible}
       maskClosable={false}
       title="User information"
       width={530}
-      okText={userId ? 'Update' : 'Add'}
+      okText={userId ? t('update') : t('add')}
       onCancel={onCancel}
       onOk={() => {
         form.validateFields()
@@ -97,20 +156,37 @@ const UserInfoModal = ({ visible, onCreate, onCancel, userId }) => {
             {
               required: true,
               message: 'Please input the phone number',
-            },
-            {
-              type: 'email'
             }
           ]}>
           <Input />
         </Form.Item>
 
+        <Form.Item label="Groups" name='group'
+          rules={[
+            // {
+            //   required: true,
+            //   message: 'Please input the password',
+            // }
+          ]}>
+          <TreeSelect {...tProps} />
+        </Form.Item>
+
+        <Form.Item label="Roles" name='role'
+          rules={[
+            // {
+            //   required: true,
+            //   message: 'Please input the password',
+            // }
+          ]}>
+          <TreeSelect {...tProps} />
+        </Form.Item>
+
         <Form.Item label="Password" name='password'
           rules={[
-            {
-              required: true,
-              message: 'Please input the password',
-            }
+            // {
+            //   required: true,
+            //   message: 'Please input the password',
+            // }
           ]}>
           <Input.Password />
         </Form.Item>
@@ -119,10 +195,10 @@ const UserInfoModal = ({ visible, onCreate, onCancel, userId }) => {
           label="Confirm password"
           name='confirmPassword'
           rules={[
-            {
-              required: true,
-              message: 'Please input the confirm password',
-            },
+            // {
+            //   required: true,
+            //   message: 'Please input the confirm password',
+            // },
             ({ getFieldValue }) => ({
               validator(rule, value) {
                 if (!value || getFieldValue('password') === value) {

@@ -4,6 +4,8 @@
     "confirmPasswordIncorrect": "Confirm new password is incorrect"
   },
   "confirm": "Confirm",
+  "update": "Update",
+  "add": "Add",
   "cancel": "Cancel",
   "yes": "Yes",
   "no": "No",

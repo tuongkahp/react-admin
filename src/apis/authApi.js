@@ -2,23 +2,23 @@ import axiosClient from './axiosClient';
 
 export const authApi = {
   login: (params) => {
-    const url = '/api/auth/login'
+    const url = '/api/v1/auth/login'
     return axiosClient.post(url, params);
   },
   logout: () => {
-    const url = '/api/auth/logout'
+    const url = '/api/v1/auth/logout'
     return axiosClient.post(url);
   },
   register: (params) => {
-    const url = '/api/auth/register'
+    const url = '/api/v1/auth/register'
     return axiosClient.post(url, params);
   },
   changePassword: (params) => {
-    const url = '/api/auth/change-password'
+    const url = '/api/v1/auth/change-password'
     return axiosClient.post(url, params);
   },
   refreshToken: (refreshToken) => {
-    const url = '/api/auth/refresh-token'
+    const url = '/api/v1/auth/refresh-token'
     return axiosClient.post(url, {}, {
       headers: {
         Authorization: `Bearer ${refreshToken}`

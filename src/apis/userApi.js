@@ -5,11 +5,11 @@ import axiosClient from './axiosClient';
 
 export const userApi = {
   getAll: (params) => {
-    const url = '/api/users';
+    const url = '/api/v1/users';
     return axiosClient.get(url, { params });
   },
   getDetail: (userId) => {
-    const url = `/api/users/${userId}`;
+    const url = `/api/v1/users/${userId}`;
     return axiosClient.get(url);
   }
 };
