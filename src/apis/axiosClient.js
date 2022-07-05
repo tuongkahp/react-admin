@@ -39,8 +39,8 @@ axiosClient.interceptors.request.use(async (request) => {
   request.headers['Accept-Language'] = getRecoil(localeState)
   const auth = getRecoil(authState)
 
-  if (auth?.token && !request?.headers?.Authorization)
-    request.headers.Authorization = `Bearer ${auth.token}`
+  if (auth?.accessToken && !request?.headers?.Authorization)
+    request.headers.Authorization = `Bearer ${auth.accessToken}`
 
   const loading = getRecoil(loadingState)
   setRecoil(loadingState, loading + 1)
@@ -93,10 +93,10 @@ axiosClient.interceptors.response.use((response) => {
         return Promise.reject(error)
 
       setRecoil(authState, refreshTokenResult.data)
-      processQueue(null, refreshTokenResult.data.token)
+      processQueue(null, refreshTokenResult.data.accessToken)
       isRefreshing = false
 
-      originalConfig.headers['Authorization'] = 'Bearer ' + refreshTokenResult.data.token
+      originalConfig.headers['Authorization'] = 'Bearer ' + refreshTokenResult.data.accessToken
       return axios(originalConfig)
 
 
