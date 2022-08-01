@@ -6,6 +6,7 @@ import BaseLayout from 'components/BaseLayout';
 import { ConfigProvider } from 'antd';
 import { localeState } from 'recoils/localeState';
 import { useRecoilValue } from 'recoil';
+import Groups from 'features/groups';
 
 // Lazy load - Code splitting
 const Cart = React.lazy(() => import('features/cart'));
@@ -25,7 +26,7 @@ function App() {
         }>
           <Route path="cart/*" element={<Cart />}></Route>
           <Route path="users/*" element={<User />}></Route>
-          <Route path="groups/*" element={<User />}></Route>
+          <Route path="groups/*" element={<Groups />}></Route>
         </Route>
         <Route path="*" element={<Navigate to="users" />} />
       </Routes>

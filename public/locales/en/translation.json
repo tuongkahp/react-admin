@@ -19,5 +19,11 @@
   "alertDeleteUser": "Are you sure delete this user?",
   "createdDate": "Created date",
   "username": "Username",
-  "addNewUser": "Add new user"
+  "addNewUser": "Add new user",
+  "addNewGroup": "Add new group",
+  "edit": "Edit",
+  "delete": "Delete",
+  "user": "User",
+  "group": "Group",
+  "list": "List"
 }

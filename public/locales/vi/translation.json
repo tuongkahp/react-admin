@@ -19,5 +19,11 @@
   "alertDeleteUser": "Bạn có chắc chắn xóa người dùng này?",
   "createdDate": "Ngày tạo",
   "username": "Tên đăng nhập",
-  "addNewUser": "Thêm người dùng"
+  "addNewUser": "Thêm người dùng",
+  "addNewGroup": "Thêm nhóm",
+  "edit": "Sửa",
+  "delete": "Xoá",
+  "user": "Người dùng",
+  "group": "Nhóm",
+  "list": "Danh sách"
 }

@@ -15,7 +15,7 @@ import { formatDate } from 'utils/common'
 const { confirm } = Modal;
 const { RangePicker } = DatePicker;
 
-const UserPage = () => {
+const GroupPage = () => {
   const [visible, setVisible] = useState(false)
   const [userData, setUserData] = useState([]);
   const [pagination, setPagination] = useState({
@@ -125,12 +125,12 @@ const UserPage = () => {
   return (
     <div className='user'>
       <Breadcrumb>
-        <Breadcrumb.Item>{t('user')}</Breadcrumb.Item>
+        <Breadcrumb.Item>{t('group')}</Breadcrumb.Item>
         <Breadcrumb.Item>{t('list')}</Breadcrumb.Item>
       </Breadcrumb>
 
       <div className='user__table-filter' align='end' >
-        <Button type='primary' onClick={() => showUserInfoModal({})}>{t('addNewUser')}</Button>
+        <Button type='primary' onClick={() => showUserInfoModal({})}>{t('addNewGroup')}</Button>
         {/* <Row justify="space-between">
           <Col> <Button type='primary' onClick={() => showUserInfoModal({})}>{t('addNewUser')}</Button></Col>
         </Row> */}
@@ -166,4 +166,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default GroupPage;
